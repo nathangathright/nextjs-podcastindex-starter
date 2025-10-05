@@ -30,6 +30,9 @@ Create a `.env.local` file:
 cp .env.local.example .env.local
 ```
 
+> [!IMPORTANT]  
+> When updating the environment variables, ensure that you create a unique USER_AGENT value.
+
 ### 4. Run Development Server
 
 ```bash
