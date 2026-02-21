@@ -1,24 +1,31 @@
 import { generateAuthHeaders } from './auth'
+import { PodcastIndexError } from './errors'
 import type {
   PodcastIndexConfig,
   SearchParams,
+  SearchByPersonParams,
   SearchResponse,
   PodcastByItunesParams,
+  PodcastsByMediumParams,
   PodcastResponse,
   EpisodeByIdParams,
   EpisodesByFeedParams,
   EpisodesByItunesParams,
+  EpisodesByPodcastGuidParams,
   EpisodesRandomParams,
+  LiveEpisodesParams,
   EpisodesResponse,
   RecentEpisodesParams,
   RecentFeedsParams,
   RecentNewFeedsParams,
+  RecentNewValueFeedsParams,
   RecentFeedsResponse,
   TrendingParams,
   ValueByFeedParams,
   StatsResponse,
   CategoriesResponse,
   AddByFeedParams,
+  AddByItunesIdParams,
   AddFeedResponse,
   HubNotifyParams,
   HubNotifyResponse,
@@ -76,7 +83,21 @@ export class PodcastIndexClient {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      let apiStatus: string | undefined
+      let description: string | undefined
+      try {
+        const body = await response.json()
+        apiStatus = body.status
+        description = body.description
+      } catch {
+        // body not parseable, leave fields undefined
+      }
+      throw new PodcastIndexError({
+        status: response.status,
+        statusText: response.statusText,
+        apiStatus,
+        description,
+      })
     }
 
     return response.json()
@@ -107,7 +128,21 @@ export class PodcastIndexClient {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      let apiStatus: string | undefined
+      let description: string | undefined
+      try {
+        const body = await response.json()
+        apiStatus = body.status
+        description = body.description
+      } catch {
+        // body not parseable, leave fields undefined
+      }
+      throw new PodcastIndexError({
+        status: response.status,
+        statusText: response.statusText,
+        apiStatus,
+        description,
+      })
     }
 
     return response.json()
@@ -138,6 +173,13 @@ export class PodcastIndexClient {
    */
   async searchMusicByTerm(params: SearchParams): Promise<SearchResponse> {
     return this.get<SearchResponse>('/search/music/byterm', params)
+  }
+
+  /**
+   * Search for people (hosts, guests, etc.) in podcasts
+   */
+  async searchByPerson(params: SearchByPersonParams): Promise<SearchResponse> {
+    return this.get<SearchResponse>('/search/byperson', params)
   }
 
   // ============================================
@@ -193,6 +235,15 @@ export class PodcastIndexClient {
    */
   async getDeadPodcasts(): Promise<SearchResponse> {
     return this.get<SearchResponse>('/podcasts/dead')
+  }
+
+  /**
+   * Get podcasts by medium type (e.g., 'podcast', 'music', 'video', 'film', 'audiobook')
+   */
+  async getPodcastsByMedium(
+    params: PodcastsByMediumParams
+  ): Promise<SearchResponse> {
+    return this.get<SearchResponse>('/podcasts/bymedium', params)
   }
 
   // ============================================
@@ -263,6 +314,24 @@ export class PodcastIndexClient {
     return this.get<EpisodesResponse>('/episodes/random', params)
   }
 
+  /**
+   * Get episodes by podcast GUID
+   */
+  async getEpisodesByPodcastGuid(
+    params: EpisodesByPodcastGuidParams
+  ): Promise<EpisodesResponse> {
+    return this.get<EpisodesResponse>('/episodes/bypodcastguid', params)
+  }
+
+  /**
+   * Get currently live podcast episodes
+   */
+  async getLiveEpisodes(
+    params?: LiveEpisodesParams
+  ): Promise<EpisodesResponse> {
+    return this.get<EpisodesResponse>('/episodes/live', params)
+  }
+
   // ============================================
   // RECENT ENDPOINTS
   // ============================================
@@ -301,6 +370,15 @@ export class PodcastIndexClient {
     return this.get<EpisodesResponse>('/recent/soundbites', { max })
   }
 
+  /**
+   * Get feeds that recently added a Value block
+   */
+  async getRecentNewValueFeeds(
+    params?: RecentNewValueFeedsParams
+  ): Promise<RecentFeedsResponse> {
+    return this.get<RecentFeedsResponse>('/recent/newvaluefeeds', params)
+  }
+
   // ============================================
   // VALUE ENDPOINTS (Value4Value)
   // ============================================
@@ -317,6 +395,13 @@ export class PodcastIndexClient {
    */
   async getValueByFeedUrl(url: string): Promise<PodcastResponse> {
     return this.get<PodcastResponse>('/value/byfeedurl', { url })
+  }
+
+  /**
+   * Get value block information by podcast GUID
+   */
+  async getValueByPodcastGuid(guid: string): Promise<PodcastResponse> {
+    return this.get<PodcastResponse>('/value/bypodcastguid', { guid })
   }
 
   // ============================================
@@ -351,6 +436,14 @@ export class PodcastIndexClient {
    */
   async addByFeedUrl(params: AddByFeedParams): Promise<AddFeedResponse> {
     return this.get<AddFeedResponse>('/add/byfeedurl', params)
+  }
+
+  /**
+   * Add a podcast by its iTunes ID
+   * NOTE: Requires API key with write or publisher permissions
+   */
+  async addByItunesId(params: AddByItunesIdParams): Promise<AddFeedResponse> {
+    return this.get<AddFeedResponse>('/add/byitunesid', params)
   }
 
   // ============================================

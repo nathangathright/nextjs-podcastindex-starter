@@ -218,6 +218,46 @@ export interface AddByFeedParams {
   itunesid?: number
 }
 
+// Search by Person Parameters
+export interface SearchByPersonParams {
+  q: string
+  max?: number
+  fulltext?: boolean
+}
+
+// Podcasts by Medium Parameters
+export interface PodcastsByMediumParams {
+  medium: string
+  max?: number
+  val?: string
+  cat?: string
+  notcat?: string
+}
+
+// Episodes by Podcast GUID Parameters
+export interface EpisodesByPodcastGuidParams {
+  guid: string
+  since?: number
+  max?: number
+  fulltext?: boolean
+}
+
+// Live Episodes Parameters
+export interface LiveEpisodesParams {
+  max?: number
+}
+
+// Recent New Value Feeds Parameters
+export interface RecentNewValueFeedsParams {
+  max?: number
+  since?: number
+}
+
+// Add by iTunes ID Parameters
+export interface AddByItunesIdParams {
+  id: number
+}
+
 // Hub (PubSubHubbub) Parameters
 export interface HubNotifyParams {
   feedId?: number

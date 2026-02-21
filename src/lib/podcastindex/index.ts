@@ -8,6 +8,7 @@
 export { PodcastIndexClient, createPodcastIndexClient } from './client'
 export { getPodcastIndexClient } from './server'
 export { generateAuthHeaders, validateCredentials } from './auth'
+export { PodcastIndexError } from './errors'
 export * from './types'
 
 // Default export

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,6 +44,12 @@ const results = await client.search({ q: 'javascript' })`}
 
         <div className="text-center text-gray-500">
           <p>Ready to build your podcast application</p>
+          <Link
+            href="/search"
+            className="mt-4 inline-block text-blue-600 hover:underline"
+          >
+            Try the search example &rarr;
+          </Link>
         </div>
       </div>
     </div>
