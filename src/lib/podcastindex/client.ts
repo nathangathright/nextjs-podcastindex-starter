@@ -55,7 +55,6 @@ export class PodcastIndexClient {
    */
   private async get<T>(
     endpoint: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params?: Record<string, any>
   ): Promise<T> {
     const url = new URL(`${this.baseUrl}${endpoint}`)
@@ -106,11 +105,7 @@ export class PodcastIndexClient {
   /**
    * Make a POST request with JSON body
    */
-  private async post<T>(
-    endpoint: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data?: any
-  ): Promise<T> {
+  private async post<T>(endpoint: string, data?: any): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
     const authHeaders = generateAuthHeaders(
       this.apiKey,
