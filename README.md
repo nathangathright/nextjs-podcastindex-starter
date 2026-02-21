@@ -48,3 +48,7 @@ pnpm build
 # Start production server
 pnpm start
 ```
+
+## How this was made
+
+Agentically-authored commits are attributed via `Co-Authored-By` in the git log.
