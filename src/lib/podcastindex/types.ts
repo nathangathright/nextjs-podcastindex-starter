@@ -145,12 +145,6 @@ export interface SearchParams {
   similar?: boolean
 }
 
-export interface PodcastByFeedParams {
-  url?: string
-  id?: number
-  podcastGuid?: string
-}
-
 export interface PodcastByItunesParams {
   id: number
 }
@@ -216,11 +210,6 @@ export interface TrendingParams {
 export interface ValueByFeedParams {
   id?: number
   url?: string
-}
-
-export interface StatsParams {
-  // Stats endpoint has no specific params
-  [key: string]: unknown
 }
 
 export interface AddByFeedParams {

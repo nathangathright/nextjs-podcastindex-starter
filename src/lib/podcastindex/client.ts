@@ -3,7 +3,6 @@ import type {
   PodcastIndexConfig,
   SearchParams,
   SearchResponse,
-  PodcastByFeedParams,
   PodcastByItunesParams,
   PodcastResponse,
   EpisodeByIdParams,
@@ -42,36 +41,6 @@ export class PodcastIndexClient {
     this.apiSecret = config.apiSecret
     this.userAgent = config.userAgent
     this.baseUrl = config.baseUrl || 'https://api.podcastindex.org/api/1.0'
-  }
-
-  /**
-   * Make a fetch request with authentication headers
-   */
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`
-    const authHeaders = generateAuthHeaders(
-      this.apiKey,
-      this.apiSecret,
-      this.userAgent
-    )
-
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...options.headers,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    return response.json()
   }
 
   /**
@@ -176,12 +145,10 @@ export class PodcastIndexClient {
   // ============================================
 
   /**
-   * Get podcast by Feed URL, Feed ID, or Podcast GUID
+   * Get podcast by feed URL
    */
-  async getPodcastByFeed(
-    params: PodcastByFeedParams
-  ): Promise<PodcastResponse> {
-    return this.get<PodcastResponse>('/podcasts/byfeedurl', params)
+  async getPodcastByFeedUrl(url: string): Promise<PodcastResponse> {
+    return this.get<PodcastResponse>('/podcasts/byfeedurl', { url })
   }
 
   /**
@@ -383,7 +350,7 @@ export class PodcastIndexClient {
    * NOTE: Requires API key with write or publisher permissions
    */
   async addByFeedUrl(params: AddByFeedParams): Promise<AddFeedResponse> {
-    return this.post<AddFeedResponse>('/add/byfeedurl', params)
+    return this.get<AddFeedResponse>('/add/byfeedurl', params)
   }
 
   // ============================================
